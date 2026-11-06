@@ -1,7 +1,7 @@
 CLANG := clang
 LINK := lld-link
 READOBJ := llvm-readobj
-TARGET := build/DellF1Bypass.efi
+TARGET := build/DellF1Skip.efi
 OBJECT := build/f1.obj
 CFLAGS := --target=x86_64-pc-win32-coff -std=c17 -O2 -Wall -Wextra -Werror \
 	-ffreestanding -fno-builtin -fno-stack-protector -fshort-wchar \

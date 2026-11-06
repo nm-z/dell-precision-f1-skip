@@ -40,7 +40,7 @@ build used Clang/LLD 22.1.8 and GNU-EFI 4.0.4.
 make clean
 make
 make inspect
-sha256sum build/DellF1Bypass.efi
+sha256sum build/DellF1Skip.efi
 ```
 
 The expected SHA-256 is:
@@ -56,11 +56,11 @@ and `/boot/efi` with the target's boot disk, ESP partition number, and mounted
 EFI System Partition.
 
 ```sh
-sudo install -D -m 0644 DellF1Bypass.efi \
-  /boot/efi/EFI/DellF1Bypass/DellF1Bypass.efi
+sudo install -D -m 0644 DellF1Skip.efi \
+  /boot/efi/EFI/DellF1Skip/DellF1Skip.efi
 sudo efibootmgr --create --driver --full-dev-path --index 0 \
   --disk /dev/sda --part 1 --label 'Dell F1 skip' \
-  --loader '\EFI\DellF1Bypass\DellF1Bypass.efi'
+  --loader '\EFI\DellF1Skip\DellF1Skip.efi'
 sudo efibootmgr --driver --verbose
 ```
 
@@ -77,8 +77,8 @@ Use `efibootmgr --driver` to obtain the four-digit entry number:
 
 ```sh
 sudo efibootmgr --driver --bootnum NNNN --delete-bootnum
-sudo rm /boot/efi/EFI/DellF1Bypass/DellF1Bypass.efi
-sudo rmdir /boot/efi/EFI/DellF1Bypass 2>/dev/null || true
+sudo rm /boot/efi/EFI/DellF1Skip/DellF1Skip.efi
+sudo rmdir /boot/efi/EFI/DellF1Skip 2>/dev/null || true
 ```
 
 ## Size and contents
@@ -86,7 +86,7 @@ sudo rmdir /boot/efi/EFI/DellF1Bypass 2>/dev/null || true
 - `f1.c`: 82 raw lines
 - `Makefile`: 23 raw lines
 - Total code and build definition: 105 raw lines
-- `DellF1Bypass.efi`: 2,048 bytes
+- `DellF1Skip.efi`: 2,048 bytes
 - No imports, firmware blobs, console hooks, private state variables, or network dependency
 
 This project is not affiliated with or supported by Dell Technologies.
