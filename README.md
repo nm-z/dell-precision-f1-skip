@@ -1,4 +1,4 @@
-# Dell Precision A34 F1 bypass
+# Dell Precision A34 F1 skip
 
 This x86-64 UEFI driver automatically supplies F1 to the Dell Precision T5810
 and T7810 A34 firmware error screen. It needs no keyboard, operating-system
@@ -59,7 +59,7 @@ EFI System Partition.
 sudo install -D -m 0644 DellF1Bypass.efi \
   /boot/efi/EFI/DellF1Bypass/DellF1Bypass.efi
 sudo efibootmgr --create --driver --full-dev-path --index 0 \
-  --disk /dev/sda --part 1 --label 'Dell F1 bypass' \
+  --disk /dev/sda --part 1 --label 'Dell F1 skip' \
   --loader '\EFI\DellF1Bypass\DellF1Bypass.efi'
 sudo efibootmgr --driver --verbose
 ```
