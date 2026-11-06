@@ -4,9 +4,8 @@ This x86-64 UEFI driver automatically supplies F1 to the Dell Precision T5810
 and T7810 A34 firmware error screen. It needs no keyboard, operating-system
 service, network connection, AMT configuration, or BIOS modification.
 
-**Status:** Live-tested on a T5810 A34 through unattended warm and S5 cold
-boots. The T7810 A34 error-handler binary is identical, but has not been tested
-on physical T7810 hardware.
+**Status:** Live-tested on a T5810 A34 and a T7810 A34 through unattended warm
+and S5 cold boots.
 
 ## Compatibility
 
@@ -14,6 +13,10 @@ on physical T7810 hardware.
 - BIOS A34 only
 - UEFI boot
 - Secure Boot disabled, or a binary signed by a key in the firmware trust store
+- SATA Operation set to AHCI. In RAID On mode the firmware never loads the
+  driver entry (observed on a T7810 A34). From Linux,
+  `sudo smbios-token-ctl --activate --token-id=0x0138` selects AHCI for the
+  next boot.
 
 Do not use this driver with another model or BIOS version. Remove it before a
 BIOS update. It acknowledges every soft halt routed through the matching Dell
@@ -71,6 +74,14 @@ with the platform's complete hardware path. An abbreviated
 Reboot through the real warning screen without pressing a key. Reaching the
 configured boot target is the only compatibility test that matters.
 
+## Check that it loads
+
+`tools/probe.c` is an observer driver that installs no protocol. It writes the
+non-volatile variables `F1SkipLoad` when the firmware loads it and `F1SkipEvent`
+when the Dell error event fires. Build it with `make probe`, install
+`build/probe.efi` as a second driver entry the same way, and look for both names
+in `/sys/firmware/efi/efivars` after a boot. Remove the entry afterwards.
+
 ## Remove
 
 Use `efibootmgr --driver` to obtain the four-digit entry number:
@@ -84,8 +95,9 @@ sudo rmdir /boot/efi/EFI/DellF1Skip 2>/dev/null || true
 ## Size and contents
 
 - `f1.c`: 82 raw lines
-- `Makefile`: 23 raw lines
-- Total code and build definition: 105 raw lines
+- `Makefile`: 28 raw lines
+- Total code and build definition: 110 raw lines
+- `tools/probe.c`: 59 raw lines, diagnostics only
 - `DellF1Skip.efi`: 2,048 bytes
 - No imports, firmware blobs, console hooks, private state variables, or network dependency
 

@@ -9,7 +9,7 @@ CFLAGS := --target=x86_64-pc-win32-coff -std=c17 -O2 -Wall -Wextra -Werror \
 LDFLAGS := /entry:EfiMain /subsystem:efi_boot_service_driver /machine:x64 \
 	/nodefaultlib /dll /noimplib /base:0 /dynamicbase /fixed:no /nxcompat \
 	/opt:noref /timestamp:0
-.PHONY: all clean inspect
+.PHONY: all clean inspect probe
 all: $(TARGET)
 build:
 	mkdir -p build
@@ -19,5 +19,10 @@ $(TARGET): $(OBJECT)
 	$(LINK) $(LDFLAGS) /out:$@ $<
 inspect: $(TARGET)
 	$(READOBJ) --file-headers --sections --coff-imports --coff-basereloc $<
+probe: build/probe.efi
+build/probe.obj: tools/probe.c | build
+	$(CLANG) $(CFLAGS) -c $< -o $@
+build/probe.efi: build/probe.obj
+	$(LINK) $(LDFLAGS) /out:$@ $<
 clean:
-	rm -f $(OBJECT) $(TARGET)
+	rm -f $(OBJECT) $(TARGET) build/probe.obj build/probe.efi
